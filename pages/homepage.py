@@ -10,7 +10,10 @@ class HomePage(BasePage):
 
     def __init__(self, browser):
         BasePage.__init__(self, browser)
-        self.__search_form = self.browser.find_element_by_id('search-container')
+        container_id = 'search-container'
+        WebDriverWait(self.browser, self.wait_time).until(
+            EC.visibility_of_element_located((By.ID, container_id)))
+        self.__search_form = self.browser.find_element_by_id(container_id)
 
     def select_one_way(self):
         one_way_select = self.__search_form.find_element_by_id(
@@ -29,11 +32,20 @@ class HomePage(BasePage):
         element.send_keys(airport+'\t')
 
     def set_date(self, date):
+        # Make sure date input fields are visible
+        WebDriverWait(self.browser, self.wait_time).until(
+            EC.visibility_of_element_located((By.NAME, 'dateInput2')))
+
+        # Set value for each field (day, month, year)
         for idx, value in enumerate(date.split('/')):
             field = self.__search_form.find_element_by_name(
                 'dateInput' + str(idx))
+
+            # Check if we want to set a different value than the one that is
+            # in the field already
             if field.text != value:
-                field.send_keys('\b\b' * idx + value)
+                field.clear()
+                field.send_keys(value)
 
     def close_cookie_policy(self):
         close_button = self.browser.find_element_by_class_name('close-icon')
@@ -44,12 +56,19 @@ class HomePage(BasePage):
         dropdown = self.__search_form.find_element_by_class_name(
             'dropdown-handle')
         dropdown.click()
+
+        # We get kwargs with names: adult, child - so we can enumerate them
+        # and create selector dynamically
         for name, value in kwargs.iteritems():
             if value > 0:
                 selector = 'div[value="paxInput.' + name + '"] input.num'
+                # Wait for each input field before setting value
+                WebDriverWait(self.browser, self.wait_time).until(
+                    EC.visibility_of_element_located(
+                        (By.CSS_SELECTOR, selector)))
                 input = self.__search_form.find_element_by_css_selector(
                     selector)
-                input.click()
+                input.clear()
                 input.send_keys(value)
                 total += int(value)
                 # Need to wait for the total passenger value to refresh
@@ -60,8 +79,20 @@ class HomePage(BasePage):
                         str(total))
                 )
 
-    def press_lets_go(self):
+    def press_lets_go(self, children):
         button = self.__search_form.find_element_by_css_selector(
             'button[ng-click="searchFlights()"]')
         button.click()
+         # there is a promo popup for families if there's at least one child
+        if children > 0:
+            self.close_promo_popup()
         return SearchPage(self.browser)
+
+    def close_promo_popup(self):
+        class_ = 'promo-popup-close'
+        # Wait for the popup to show up
+        WebDriverWait(self.browser, self.wait_time).until(
+            EC.visibility_of_element_located((By.CLASS_NAME, class_)))
+        # Click close button
+        close_button = self.browser.find_element_by_class_name(class_)
+        close_button.click()
