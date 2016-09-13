@@ -44,7 +44,6 @@ class HomePage(BasePage):
         for name, value in kwargs.iteritems():
             if value > 0:
                 selector = 'div[value="paxInput.' + name + '"] input.num'
-                #print '{} : {} - {}'.format(name, value, selector)
                 input = self.__search_form.find_element_by_css_selector(selector)
                 input.click()
                 input.send_keys(value)

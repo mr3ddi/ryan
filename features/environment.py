@@ -14,7 +14,6 @@ def before_scenario(context, scenario):
     context.browser = webdriver.Chrome(executable_path=chromedriver_path, chrome_options=options)
     context.browser.implicitly_wait(10)
     context.browser.get(HomePage.address)
-    #WebDriverWait(context.browser, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div.col-departure-airport')))
 
 def after_scenario(context, scenario):
     context.browser.quit()
