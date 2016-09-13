@@ -13,7 +13,8 @@ class HomePage(BasePage):
         self.__search_form = self.browser.find_element_by_id('search-container')
 
     def select_one_way(self):
-        one_way_select = self.__search_form.find_element_by_id('flight-search-type-option-one-way')
+        one_way_select = self.__search_form.find_element_by_id(
+            'flight-search-type-option-one-way')
         one_way_select.click()
 
     def set_airport_from(self, airport):
@@ -29,7 +30,8 @@ class HomePage(BasePage):
 
     def set_date(self, date):
         for idx, value in enumerate(date.split('/')):
-            field = self.__search_form.find_element_by_name('dateInput' + str(idx))
+            field = self.__search_form.find_element_by_name(
+                'dateInput' + str(idx))
             if field.text != value:
                 field.send_keys('\b\b' * idx + value)
 
@@ -39,21 +41,27 @@ class HomePage(BasePage):
 
     def set_passengers(self, **kwargs):
         total = 0
-        dropdown = self.__search_form.find_element_by_class_name('dropdown-handle')
+        dropdown = self.__search_form.find_element_by_class_name(
+            'dropdown-handle')
         dropdown.click()
         for name, value in kwargs.iteritems():
             if value > 0:
                 selector = 'div[value="paxInput.' + name + '"] input.num'
-                input = self.__search_form.find_element_by_css_selector(selector)
+                input = self.__search_form.find_element_by_css_selector(
+                    selector)
                 input.click()
                 input.send_keys(value)
                 total += int(value)
-                #time.sleep(5)
-                WebDriverWait(self.browser, 5).until(
-                    EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#row-dates-pax div.value'), str(total))
+                # Need to wait for the total passenger value to refresh
+                # before setting next passenger group or it won't work
+                WebDriverWait(self.browser, self.wait_time).until(
+                    EC.text_to_be_present_in_element(
+                        (By.CSS_SELECTOR, '#row-dates-pax div.value'),
+                        str(total))
                 )
 
     def press_lets_go(self):
-        button = self.__search_form.find_element_by_css_selector('button[ng-click="searchFlights()"]')
+        button = self.__search_form.find_element_by_css_selector(
+            'button[ng-click="searchFlights()"]')
         button.click()
         return SearchPage(self.browser)
