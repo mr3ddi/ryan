@@ -54,7 +54,7 @@ class HomePage(BasePage):
                 total += int(value)
                 # Need to wait for the total passenger value to refresh
                 # before setting next passenger group or it won't work
-                WebDriverWait(self.browser, 5).until(
+                WebDriverWait(self.browser, self.wait_time).until(
                     EC.text_to_be_present_in_element(
                         (By.CSS_SELECTOR, '#row-dates-pax div.value'),
                         str(total))

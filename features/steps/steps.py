@@ -19,6 +19,7 @@ def make_booking(context, from_airport, to_airport, date, adults, children, pl):
     home_page.set_date(date)
     home_page.set_passengers(adults=adults, children=children)
     search_page = home_page.press_lets_go()
+    # there is a promo popup for families if there's at least one child
     if children > 0:
         search_page.close_promo_popup()
     search_page.choose_first_flight_regular_price()
@@ -27,17 +28,21 @@ def make_booking(context, from_airport, to_airport, date, adults, children, pl):
     time.sleep(1)
     extras_page = search_page.press_continue()
     extras_page.press_check_out()
-    extras_page.close_seat_popup()
+    context.payment_page = extras_page.close_seat_popup()
 
 @when(r'I pay for booking'
         ' with card details "(?P<number>\d{4}\s?\d{4}\s?\d{4}\s?\d{4})"'
         ', "(?P<date>\d{2}/\d{2})"'
         ' and "(?P<cvv>\d{3})"')
 def pay_with_card(context, number, date, cvv):
-    payment_page = PaymentPage(context.browser)
+    payment_page = context.payment_page
     payment_page.fill_passenger_data()
-    time.sleep(5)
+    payment_page.fill_contact_details()
+    payment_page.fill_card_details(number, date, cvv)
+    payment_page.fill_billing_address()
+    payment_page.accept_terms()
+    payment_page.press_pay_now()
 
 @then('I should get payment declined message')
 def check_payment_declined(context):
-    pass
+    context.payment_page.check_payment_declined()

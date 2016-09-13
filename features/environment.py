@@ -9,7 +9,7 @@ def before_scenario(context, scenario):
     chromedriver_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'chromedriver'))
     context.browser = webdriver.Chrome(
-        executable_path=chromedriver_path, chrome_options=options)
+        executable_path=chromedriver_path) #, chrome_options=options)
     context.browser.implicitly_wait(10)
     context.browser.get(HomePage.address)
 

@@ -2,4 +2,4 @@ class BasePage:
 
     def __init__(self, browser):
         self.browser = browser
-        self.wait_time = 5
+        self.wait_time = 10
