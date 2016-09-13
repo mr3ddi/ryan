@@ -9,7 +9,8 @@ class SearchPage(BasePage):
         regular_price.click()
 
     def close_promo_popup(self):
-        close_button = self.browser.find_element_by_class_name('promo-popup-close')
+        close_button = self.browser.find_element_by_class_name(
+            'promo-popup-close')
         close_button.click()
 
     def press_continue(self):
