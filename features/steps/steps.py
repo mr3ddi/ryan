@@ -12,20 +12,21 @@ use_step_matcher('re')
         ' and (?P<children>\d+) child(?P<pl>ren)?')
 def make_booking(context, from_airport, to_airport, date, adults, children, pl):
     home_page = HomePage(context.browser)
+
+    #close cookie policy as it tends to obscure other elements
     home_page.close_cookie_policy()
     home_page.select_one_way()
     home_page.set_airport_from(from_airport)
     home_page.set_airport_to(to_airport)
     home_page.set_date(date)
     home_page.set_passengers(adults=adults, children=children)
-    search_page = home_page.press_lets_go()
-    # there is a promo popup for families if there's at least one child
-    if children > 0:
-        search_page.close_promo_popup()
+    search_page = home_page.press_lets_go(children)
     search_page.choose_first_flight_regular_price()
+
     #this is an ugly hack but for some reason I get "checkout took too long"
     # if I press continue too fast
     time.sleep(1)
+
     extras_page = search_page.press_continue()
     extras_page.press_check_out()
     context.payment_page = extras_page.close_seat_popup()

@@ -10,15 +10,13 @@ class PaymentPage(BasePage):
         BasePage.__init__(self, browser)
         # Wait for pay now button - then it's safe to click
         WebDriverWait(self.browser, self.wait_time).until(
-            EC.visibility_of_element_located((By.ID, 'pay-now-btn')))
-        self.__actions = ActionChains(self.browser)
+            EC.visibility_of_element_located((By.ID, 'payment-contact-form')))
 
     def fill_passenger_data(self):
         title_selects = self.browser.find_elements_by_css_selector(
             'select[id^="title"]')
 
         # Go through all title select fields and set title to Mr
-        # Yay for a stag party ;)
         for select_element in title_selects:
             select = Select(select_element)
             select.select_by_index(1)
