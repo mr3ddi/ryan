@@ -96,7 +96,7 @@ An example junit test report for ryan would look like this:
 </system-out></testcase></testsuite>
 ```
 
-## Things that __can__ and __should__ be improved (aka TODO)
+## Things that CAN and SHOULD be improved (aka TODO)
 
 * Write proper method documentation
 * Use UI Map to gather all locators in one place (or one place per page)
