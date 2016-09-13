@@ -12,7 +12,6 @@ for browser automation.
 ChromeDriver is used as Chrome is the most popular browser in the world.
 
 ryan finds elements by _id_ or _name_ wherever possible.
-
 Unfortunately not all elements on Ryanair page have id or name.
 In such cases ryan will use _class_ or even _css_ when simple _class_ name is
 not available.
@@ -50,7 +49,7 @@ Bundled by default with MacOS thus no special download should be required.
 Can be installed with:
 
 ```bash
-pip install behave
+pip install selenium
 ```
 
 ### selenium package
@@ -97,13 +96,16 @@ An example junit test report for ryan would look like this:
 </system-out></testcase></testsuite>
 ```
 
-## Things that can and should be improved (aka TODO)
+## Things that __can__ and __should__ be improved (aka TODO)
 
 * Write proper method documentation
 * Use UI Map to gather all locators in one place (or one place per page)
 * Move magic numbers to constants
+* Introduce more variation in booking data as Ryanair detects duplicate bookings
+and displays a different error message for them
 * Introduce better granulation in Page Objects (page components)
 * Introduce some input error detection
+* Add requirements.txt for easier pip install of required packages
 * Use scenario outline to add more data to tests
 * Investigate why sometimes Ryanair page says there are no flights for given
 date when there are flights
